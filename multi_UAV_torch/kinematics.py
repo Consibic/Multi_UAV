@@ -11,7 +11,11 @@ def get_R(phi, theta, psi):
     R31 = torch.sin(phi) * torch.sin(psi) - torch.cos(phi) * torch.sin(theta) * torch.cos(psi)
     R32 = torch.sin(phi) * torch.cos(psi) + torch.cos(phi) * torch.sin(theta) * torch.sin(psi)
     R33 = torch.cos(phi) * torch.cos(theta)
-    return torch.tensor([R11, R12, R13], [R21, R22, R23], [R31, R32, R33], dtype=torch.float32)
+    return torch.cat([
+        torch.cat([R11, R12, R13], dim=2), 
+        torch.cat([R21, R22, R23], dim=2), 
+        torch.cat([R31, R32, R33], dim=2)
+    ], dim=1)
 
 
 def get_Z(r, l):
@@ -35,3 +39,27 @@ def get_B_dot(r, v, l):
     v_T = v.transpose(1, 2)  # shape (bs, 1, 2)
     B_dot = torch.cat([O2, ((Z) ** 2 * v_T + torch.bmm(r_T, v) * r_T)/((Z) ** 3)], dim=1)  # shape (bs, 3, 2)
     return B_dot
+
+
+def skew_symmetric(v):
+    return torch.cat([
+        torch.cat([0, -v[2], v[1]], dim=2), 
+        torch.cat([v[2], 0, -v[0]], dim=2), 
+        torch.cat([-v[1], v[0], 0], dim=2)
+    ], dim=1)
+
+
+def get_A(l, m):
+    A = torch.zeros((3, 3))
+    for j in range(len(m)):
+        t_j_skew = skew_symmetric(l[:, j])
+        A += t_j_skew * m[j]
+    return A
+
+
+def get_J(l, m):
+    J = torch.zeros((3, 3))
+    for j in range(len(m)):
+        t_j_skew = skew_symmetric(l[:, j])
+        J += -m[j] * torch.bmm(t_j_skew, t_j_skew)
+    return J
