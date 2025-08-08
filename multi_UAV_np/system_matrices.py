@@ -1,5 +1,5 @@
 import numpy as np
-from Multi_UAV.multi_UAV_np.kinematics import *
+from multi_UAV_np.kinematics import *
 
 # Note that our control input is 9x1, basically x,y,z lift control for each drone
 

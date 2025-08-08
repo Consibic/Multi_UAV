@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.linalg import block_diag
-from Multi_UAV.multi_UAV_np.kinematics import *
-from Multi_UAV.multi_UAV_np.system_matrices import *
+from multi_UAV_np.kinematics import *
+from multi_UAV_np.system_matrices import *
 
 # Mass of the payload
 m_p = 0.5

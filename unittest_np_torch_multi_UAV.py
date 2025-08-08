@@ -95,10 +95,6 @@ class TestNumpyTorch(unittest.TestCase):
                 print("-" * 20, "Kinematics Test: OK", "-" * 20)
 
                 print("-" * 20, "System Matrices Test", "-" * 20)
-                print("-------------------"
-                      )
-                print(M)
-                print(M_torch)
                 for i in range(M.shape[0]):
                     for j in range(M.shape[1]):
                         self.assertAlmostEqual(M[i][0], M_torch[i], msg=f"M failed at {i},{j}", delta=self.delta)
